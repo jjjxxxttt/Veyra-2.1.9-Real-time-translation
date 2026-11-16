@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "sourceTag": "n9.0.1",
+  "sourceCommit": "bf1b838f2ab88b4f8fd83443325c782ea0e0f7fa",
+  "license": "LGPL-2.1-or-later",
+  "configuration": [
+    "--toolchain=msvc",
+    "--arch=x86_64",
+    "--target-os=win32",
+    "--disable-doc",
+    "--disable-programs",
+    "--disable-everything",
+    "--disable-autodetect",
+    "--disable-avcodec",
+    "--disable-avformat",
+    "--disable-avdevice",
+    "--disable-swscale",
+    "--disable-swresample",
+    "--enable-avfilter",
+    "--enable-filter=bwdif,deinterlace_d3d12",
+    "--enable-d3d12va",
+    "--enable-d3d11va",
+    "--enable-shared",
+    "--disable-static",
+    "--disable-x86asm",
+    "--enable-w32threads",
+    "--cc=cl.exe",
+    "--cxx=cl.exe",
+    "--ld=link.exe",
+    "--ar=C:\\veyra-deps\\vcpkg\\downloads\\tools\\msys2\\0fcfdbb60b602f3c\\usr\\share\\automake-1.18\\ar-lib lib.exe",
+    "--ranlib=:",
+    "--extra-cflags=-MD",
+    "--extra-cxxflags=-MD",
+    "--prefix=E:\\项目\\Veyra\\deps\\ffmpeg-filter-issues41-45-20261016"
+  ],
+  "patchSha256": "e93c2c40877a19d2da0319056ff19cf70c1ca5fc5386b06b3cc48cfe9fb6f461",
+  "correspondingSource": {
+    "archive": "E:\\项目\\Veyra\\archives\\issues41-45-20261016\\FFmpeg-9.0.1-deinterlace-module-source.zip",
+    "sha256": "f993629b6587bac09d26c3b365b59f009edd01e539c79436aae7775fc4448152"
+  },
+  "files": [
+    {
+      "name": "avfilter-12.dll",
+      "sha256": "a1b1db7d702f23fb2851b6733071c815da2f753995a7f7490768ab05e3c00a4d",
+      "bytes": 248832
+    }
+  ],
+  "existingRuntimeFilesPreserved": true
+}

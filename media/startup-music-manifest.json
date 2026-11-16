@@ -1,0 +1,8 @@
+{
+  "path": "media/startup-music.mp3",
+  "size": 1847011,
+  "sha256": "3005aa601f06a97d3968fd9fa171e870fceb4ec47586f1e950c9ed3c7875fb6a",
+  "source": "User-provided BGM.MP3",
+  "authorization": "2026-11-15 user confirmed runnable-package distribution; exclude source archives/Git",
+  "loop": false
+}

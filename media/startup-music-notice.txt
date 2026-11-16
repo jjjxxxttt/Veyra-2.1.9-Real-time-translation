@@ -1,0 +1,3 @@
+User supplied startup music. The user confirmed permission to distribute this exact file in Veyra runnable packages. Not part of Veyra source code or its GPL license.
+SHA256 3005aa601f06a97d3968fd9fa171e870fceb4ec47586f1e950c9ed3c7875fb6a
+Plays once per launch; opening media or disabling music stops it. No looping.

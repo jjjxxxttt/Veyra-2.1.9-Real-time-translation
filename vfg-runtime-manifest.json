@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "localOnly": false,
+  "runtime": "NVIDIA Video Effects SDK 1.3.0 / nvidia-vfx 0.2.0.0",
+  "sourceWheel": "nvidia_vfx-0.2.0.0-cp311-cp311-win_amd64.whl",
+  "sourceWheelBytes": 435809365,
+  "sourceWheelSha256": "5aaf6a42bc6b6dbbf52fcb714194c994a6893cbbf7ada38bc2165a1f83e4a6fc",
+  "license": "licenses/nvidia-vfg",
+  "publicDistributionAudited": false,
+  "pythonRequired": false,
+  "files": [
+    {
+      "path": "runtime/nvidia-vfg/cudart64_12.dll",
+      "name": "cudart64_12.dll",
+      "size": 584304,
+      "sha256": "663b5fe65aa6c654b8b085a879f49deb19f2cb033b8f2ff8dffd06cdefe0d1db",
+      "experimental": true,
+      "removable": true,
+      "modified": false,
+      "version": "6,14,11,12080",
+      "signature": "Valid",
+      "signer": "CN=NVIDIA Corporation, OU=2008B9F, O=NVIDIA Corporation, L=Santa Clara, S=California, C=US"
+    },
+    {
+      "path": "runtime/nvidia-vfg/NVCVImage.dll",
+      "name": "NVCVImage.dll",
+      "size": 2694256,
+      "sha256": "689a64586c804468127647b7ed24acc36a9a9780502ffe95ad11aa4fe3286a39",
+      "experimental": true,
+      "removable": true,
+      "modified": false,
+      "version": "",
+      "signature": "Valid",
+      "signer": "CN=NVIDIA Corporation, OU=2008B9F, O=NVIDIA Corporation, L=Santa Clara, S=California, C=US"
+    },
+    {
+      "path": "runtime/nvidia-vfg/nvngxruntime.dll",
+      "name": "nvngxruntime.dll",
+      "size": 83568,
+      "sha256": "d2dbd1993000a2eed2c7ad8cd417ffc738ea180003daacf190e737121869d637",
+      "experimental": true,
+      "removable": true,
+      "modified": false,
+      "version": null,
+      "signature": "Valid",
+      "signer": "CN=NVIDIA Corporation, OU=2008B9F, O=NVIDIA Corporation, L=Santa Clara, S=California, C=US"
+    },
+    {
+      "path": "runtime/nvidia-vfg/NVVideoEffects.dll",
+      "name": "NVVideoEffects.dll",
+      "size": 104560,
+      "sha256": "c6b042fc57bdb6bea88c9c52cb951582377d3f1643acf52a52d197195a1ea8f4",
+      "experimental": true,
+      "removable": true,
+      "modified": false,
+      "version": "1.3.0.0",
+      "signature": "Valid",
+      "signer": "CN=NVIDIA Corporation, OU=2008B9F, O=NVIDIA Corporation, L=Santa Clara, S=California, C=US"
+    },
+    {
+      "path": "runtime/nvidia-vfg/nvVFXVideoFrameGeneration.dll",
+      "name": "nvVFXVideoFrameGeneration.dll",
+      "size": 207321712,
+      "sha256": "270cf4fff9329908f9770d306cb51b910ee04323af5520cd02a98a2e22aba795",
+      "experimental": true,
+      "removable": true,
+      "modified": false,
+      "version": null,
+      "signature": "Valid",
+      "signer": "CN=NVIDIA Corporation, OU=2008B9F, O=NVIDIA Corporation, L=Santa Clara, S=California, C=US"
+    }
+  ],
+  "vfgOnlyDependencySet": true,
+  "omittedSdkLibraries": [
+    "nppc64_12.dll",
+    "nppial64_12.dll",
+    "nppicc64_12.dll",
+    "nppidei64_12.dll",
+    "nppif64_12.dll",
+    "nppig64_12.dll",
+    "nppim64_12.dll",
+    "nppist64_12.dll",
+    "nppitc64_12.dll"
+  ],
+  "dependencyAudit": "docs/RUNTIME_SIZE_ACCEPTANCE_2026-10-04.md",
+  "distributionAuthorized": "2026-10-04 user-authorized 2.0.3 Release",
+  "identityAndLicenseIncluded": true
+}

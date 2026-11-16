@@ -1,0 +1,2481 @@
+.version 8.5
+.target sm_86
+.address_size 64
+
+
+
+
+
+.visible .entry conv_dl2_pool(
+.param .u64 conv_dl2_pool_param_0,
+.param .u64 conv_dl2_pool_param_1,
+.param .u32 conv_dl2_pool_param_2,
+.param .u32 conv_dl2_pool_param_3,
+.param .u32 conv_dl2_pool_param_4,
+.param .u32 conv_dl2_pool_param_5,
+.param .u64 conv_dl2_pool_param_6,
+.param .u32 conv_dl2_pool_param_7,
+.param .u32 conv_dl2_pool_param_8,
+.param .u32 conv_dl2_pool_param_9,
+.param .u32 conv_dl2_pool_param_10,
+.param .u64 conv_dl2_pool_param_11,
+.param .u32 conv_dl2_pool_param_12,
+.param .u32 conv_dl2_pool_param_13,
+.param .u32 conv_dl2_pool_param_14,
+.param .u32 conv_dl2_pool_param_15
+)
+.maxntid 128, 1, 1
+{
+.reg .pred %p<34>;
+.reg .b32 %r<1447>;
+.reg .b64 %rd<476>;
+.loc	1 99 0
+
+.shared .align 128 .b8 _ZZ13conv_dl2_poolE4tile[8640];
+
+.shared .align 16 .b8 _ZZ13conv_dl2_poolE5ctile[5120];
+
+ld.param.u64 %rd5, [conv_dl2_pool_param_0];
+ld.param.u64 %rd6, [conv_dl2_pool_param_1];
+ld.param.u64 %rd7, [conv_dl2_pool_param_6];
+ld.param.u32 %r45, [conv_dl2_pool_param_8];
+ld.param.u32 %r46, [conv_dl2_pool_param_9];
+ld.param.u64 %rd8, [conv_dl2_pool_param_11];
+ld.param.u32 %r47, [conv_dl2_pool_param_13];
+ld.param.u32 %r48, [conv_dl2_pool_param_14];
+cvta.to.global.u64 %rd1, %rd8;
+.loc	1 112 5
+mov.u32 %r1, %tid.x;
+.loc	1 114 5
+mov.u32 %r49, %ctaid.x;
+shl.b32 %r2, %r49, 4;
+mov.u32 %r50, %ctaid.y;
+shl.b32 %r3, %r50, 2;
+.loc	1 166 9
+setp.gt.s32 %p1, %r1, 431;
+@%p1 bra $L__BB0_7;
+
+.loc	1 0 9
+add.s32 %r4, %r3, -1;
+add.s32 %r5, %r2, -1;
+cvt.s64.s32 %rd2, %r46;
+.loc	1 166 9
+max.s32 %r51, %r1, 304;
+add.s32 %r52, %r51, 127;
+sub.s32 %r6, %r52, %r1;
+shr.u32 %r53, %r6, 7;
+add.s32 %r54, %r53, 1;
+and.b32 %r1440, %r54, 3;
+setp.eq.s32 %p2, %r1440, 0;
+mov.u32 %r1441, %r1;
+@%p2 bra $L__BB0_4;
+
+shl.b32 %r1438, %r1, 3;
+mov.u64 %rd19, _ZZ13conv_dl2_poolE4tile;
+mov.u32 %r1441, %r1;
+
+$L__BB0_3:
+.pragma "nounroll";
+.loc	1 168 13
+mul.hi.s32 %r57, %r1441, 954437177;
+shr.u32 %r58, %r57, 31;
+shr.s32 %r59, %r57, 4;
+add.s32 %r60, %r59, %r58;
+.loc	1 169 13
+add.s32 %r61, %r4, %r60;
+.loc	1 167 13
+shr.s32 %r62, %r1441, 31;
+shr.u32 %r63, %r62, 30;
+add.s32 %r64, %r1441, %r63;
+shr.s32 %r65, %r64, 2;
+.loc	1 169 13
+add.s32 %r66, %r5, %r65;
+mad.lo.s32 %r67, %r60, -18, %r66;
+.loc	1 170 13
+shr.u32 %r68, %r61, 31;
+not.b32 %r69, %r68;
+setp.lt.s32 %p3, %r61, %r45;
+selp.u32 %r70, -1, 0, %p3;
+and.b32 %r71, %r69, %r70;
+shr.u32 %r72, %r67, 31;
+not.b32 %r73, %r72;
+and.b32 %r74, %r71, %r73;
+setp.lt.s32 %p4, %r67, %r46;
+selp.u32 %r75, 1, 0, %p4;
+and.b32 %r76, %r74, %r75;
+setp.ne.s32 %p5, %r76, 0;
+.loc	1 171 13
+selp.b32 %r77, %r61, 0, %p5;
+cvt.s64.s32 %rd10, %r77;
+mul.lo.s64 %rd11, %rd10, %rd2;
+selp.b32 %r78, %r67, 0, %p5;
+cvt.s64.s32 %rd12, %r78;
+add.s64 %rd13, %rd11, %rd12;
+shl.b64 %rd14, %rd13, 5;
+mad.lo.s32 %r79, %r65, -32, %r1438;
+cvt.s64.s32 %rd15, %r79;
+add.s64 %rd16, %rd14, %rd15;
+shl.b64 %rd17, %rd16, 1;
+add.s64 %rd9, %rd7, %rd17;
+.loc	1 172 13
+shl.b32 %r80, %r65, 3;
+add.s32 %r81, %r1438, %r80;
+.loc	1 172 13
+.loc	1 29 32, function_name $L__info_string0, inlined_at 1 172 13
+shl.b32 %r82, %r81, 1;
+cvt.u64.u32 %rd18, %r82;
+add.s64 %rd20, %rd19, %rd18;
+cvt.u32.u64 %r55, %rd20;
+.loc	1 172 13
+.loc	1 31 5, function_name $L__info_string1, inlined_at 1 172 13
+selp.b32 %r56, 16, 0, %p5;
+
+cp.async.cg.shared.global [%r55], [%rd9], 16, %r56;
+
+
+.loc	1 166 38
+add.s32 %r1441, %r1441, 128;
+.loc	1 166 9
+add.s32 %r1438, %r1438, 1024;
+add.s32 %r1440, %r1440, -1;
+setp.ne.s32 %p6, %r1440, 0;
+@%p6 bra $L__BB0_3;
+
+$L__BB0_4:
+setp.lt.u32 %p7, %r6, 384;
+@%p7 bra $L__BB0_7;
+
+shl.b32 %r1442, %r1441, 3;
+mov.u64 %rd34, _ZZ13conv_dl2_poolE4tile;
+
+$L__BB0_6:
+.loc	1 168 13
+mul.hi.s32 %r91, %r1441, 954437177;
+shr.u32 %r92, %r91, 31;
+shr.s32 %r93, %r91, 4;
+add.s32 %r94, %r93, %r92;
+.loc	1 169 13
+add.s32 %r95, %r4, %r94;
+.loc	1 167 13
+shr.s32 %r96, %r1441, 31;
+shr.u32 %r97, %r96, 30;
+add.s32 %r98, %r1441, %r97;
+shr.s32 %r99, %r98, 2;
+.loc	1 169 13
+add.s32 %r100, %r5, %r99;
+mad.lo.s32 %r101, %r94, -18, %r100;
+.loc	1 170 13
+shr.u32 %r102, %r95, 31;
+not.b32 %r103, %r102;
+setp.lt.s32 %p8, %r95, %r45;
+selp.u32 %r104, -1, 0, %p8;
+and.b32 %r105, %r103, %r104;
+shr.u32 %r106, %r101, 31;
+not.b32 %r107, %r106;
+and.b32 %r108, %r105, %r107;
+setp.lt.s32 %p9, %r101, %r46;
+selp.u32 %r109, 1, 0, %p9;
+and.b32 %r110, %r108, %r109;
+setp.ne.s32 %p10, %r110, 0;
+.loc	1 171 13
+selp.b32 %r111, %r95, 0, %p10;
+cvt.s64.s32 %rd25, %r111;
+mul.lo.s64 %rd26, %rd25, %rd2;
+selp.b32 %r112, %r101, 0, %p10;
+cvt.s64.s32 %rd27, %r112;
+add.s64 %rd28, %rd26, %rd27;
+shl.b64 %rd29, %rd28, 5;
+mad.lo.s32 %r113, %r99, -32, %r1442;
+cvt.s64.s32 %rd30, %r113;
+add.s64 %rd31, %rd29, %rd30;
+shl.b64 %rd32, %rd31, 1;
+add.s64 %rd21, %rd7, %rd32;
+.loc	1 172 13
+shl.b32 %r114, %r99, 3;
+add.s32 %r115, %r1442, %r114;
+.loc	1 29 32, function_name $L__info_string0, inlined_at 1 172 13
+shl.b32 %r116, %r115, 1;
+cvt.u64.u32 %rd33, %r116;
+add.s64 %rd35, %rd34, %rd33;
+cvt.u32.u64 %r83, %rd35;
+.loc	1 31 5, function_name $L__info_string1, inlined_at 1 172 13
+selp.b32 %r84, 16, 0, %p10;
+
+cp.async.cg.shared.global [%r83], [%rd21], 16, %r84;
+
+
+.loc	1 167 13
+add.s32 %r117, %r1441, 128;
+shr.s32 %r118, %r117, 31;
+shr.u32 %r119, %r118, 30;
+add.s32 %r120, %r117, %r119;
+shr.s32 %r121, %r120, 2;
+.loc	1 168 13
+mul.hi.s32 %r122, %r117, 954437177;
+shr.u32 %r123, %r122, 31;
+shr.s32 %r124, %r122, 4;
+add.s32 %r125, %r124, %r123;
+.loc	1 169 13
+add.s32 %r126, %r4, %r125;
+add.s32 %r127, %r5, %r121;
+mad.lo.s32 %r128, %r125, -18, %r127;
+.loc	1 170 13
+shr.u32 %r129, %r126, 31;
+not.b32 %r130, %r129;
+setp.lt.s32 %p11, %r126, %r45;
+selp.u32 %r131, -1, 0, %p11;
+and.b32 %r132, %r130, %r131;
+shr.u32 %r133, %r128, 31;
+not.b32 %r134, %r133;
+and.b32 %r135, %r132, %r134;
+setp.lt.s32 %p12, %r128, %r46;
+selp.u32 %r136, 1, 0, %p12;
+and.b32 %r137, %r135, %r136;
+setp.ne.s32 %p13, %r137, 0;
+.loc	1 171 13
+selp.b32 %r138, %r126, 0, %p13;
+cvt.s64.s32 %rd36, %r138;
+mul.lo.s64 %rd37, %rd36, %rd2;
+selp.b32 %r139, %r128, 0, %p13;
+cvt.s64.s32 %rd38, %r139;
+add.s64 %rd39, %rd37, %rd38;
+shl.b64 %rd40, %rd39, 5;
+add.s32 %r140, %r1442, 1024;
+mad.lo.s32 %r141, %r121, -32, %r140;
+cvt.s64.s32 %rd41, %r141;
+add.s64 %rd42, %rd40, %rd41;
+shl.b64 %rd43, %rd42, 1;
+add.s64 %rd22, %rd7, %rd43;
+.loc	1 172 13
+shl.b32 %r142, %r121, 3;
+add.s32 %r143, %r140, %r142;
+.loc	1 29 32, function_name $L__info_string0, inlined_at 1 172 13
+shl.b32 %r144, %r143, 1;
+cvt.u64.u32 %rd44, %r144;
+add.s64 %rd45, %rd34, %rd44;
+cvt.u32.u64 %r85, %rd45;
+.loc	1 31 5, function_name $L__info_string1, inlined_at 1 172 13
+selp.b32 %r86, 16, 0, %p13;
+
+cp.async.cg.shared.global [%r85], [%rd22], 16, %r86;
+
+
+.loc	1 167 13
+add.s32 %r145, %r1441, 256;
+shr.s32 %r146, %r145, 31;
+shr.u32 %r147, %r146, 30;
+add.s32 %r148, %r145, %r147;
+shr.s32 %r149, %r148, 2;
+.loc	1 168 13
+mul.hi.s32 %r150, %r145, 954437177;
+shr.u32 %r151, %r150, 31;
+shr.s32 %r152, %r150, 4;
+add.s32 %r153, %r152, %r151;
+.loc	1 169 13
+add.s32 %r154, %r4, %r153;
+add.s32 %r155, %r5, %r149;
+mad.lo.s32 %r156, %r153, -18, %r155;
+.loc	1 170 13
+shr.u32 %r157, %r154, 31;
+not.b32 %r158, %r157;
+setp.lt.s32 %p14, %r154, %r45;
+selp.u32 %r159, -1, 0, %p14;
+and.b32 %r160, %r158, %r159;
+shr.u32 %r161, %r156, 31;
+not.b32 %r162, %r161;
+and.b32 %r163, %r160, %r162;
+setp.lt.s32 %p15, %r156, %r46;
+selp.u32 %r164, 1, 0, %p15;
+and.b32 %r165, %r163, %r164;
+setp.ne.s32 %p16, %r165, 0;
+.loc	1 171 13
+selp.b32 %r166, %r154, 0, %p16;
+cvt.s64.s32 %rd46, %r166;
+mul.lo.s64 %rd47, %rd46, %rd2;
+selp.b32 %r167, %r156, 0, %p16;
+cvt.s64.s32 %rd48, %r167;
+add.s64 %rd49, %rd47, %rd48;
+shl.b64 %rd50, %rd49, 5;
+add.s32 %r168, %r1442, 2048;
+mad.lo.s32 %r169, %r149, -32, %r168;
+cvt.s64.s32 %rd51, %r169;
+add.s64 %rd52, %rd50, %rd51;
+shl.b64 %rd53, %rd52, 1;
+add.s64 %rd23, %rd7, %rd53;
+.loc	1 172 13
+shl.b32 %r170, %r149, 3;
+add.s32 %r171, %r168, %r170;
+.loc	1 29 32, function_name $L__info_string0, inlined_at 1 172 13
+shl.b32 %r172, %r171, 1;
+cvt.u64.u32 %rd54, %r172;
+add.s64 %rd55, %rd34, %rd54;
+cvt.u32.u64 %r87, %rd55;
+.loc	1 31 5, function_name $L__info_string1, inlined_at 1 172 13
+selp.b32 %r88, 16, 0, %p16;
+
+cp.async.cg.shared.global [%r87], [%rd23], 16, %r88;
+
+
+.loc	1 167 13
+add.s32 %r173, %r1441, 384;
+shr.s32 %r174, %r173, 31;
+shr.u32 %r175, %r174, 30;
+add.s32 %r176, %r173, %r175;
+shr.s32 %r177, %r176, 2;
+.loc	1 168 13
+mul.hi.s32 %r178, %r173, 954437177;
+shr.u32 %r179, %r178, 31;
+shr.s32 %r180, %r178, 4;
+add.s32 %r181, %r180, %r179;
+.loc	1 169 13
+add.s32 %r182, %r4, %r181;
+add.s32 %r183, %r5, %r177;
+mad.lo.s32 %r184, %r181, -18, %r183;
+.loc	1 170 13
+shr.u32 %r185, %r182, 31;
+not.b32 %r186, %r185;
+setp.lt.s32 %p17, %r182, %r45;
+selp.u32 %r187, -1, 0, %p17;
+and.b32 %r188, %r186, %r187;
+shr.u32 %r189, %r184, 31;
+not.b32 %r190, %r189;
+and.b32 %r191, %r188, %r190;
+setp.lt.s32 %p18, %r184, %r46;
+selp.u32 %r192, 1, 0, %p18;
+and.b32 %r193, %r191, %r192;
+setp.ne.s32 %p19, %r193, 0;
+.loc	1 171 13
+selp.b32 %r194, %r182, 0, %p19;
+cvt.s64.s32 %rd56, %r194;
+mul.lo.s64 %rd57, %rd56, %rd2;
+selp.b32 %r195, %r184, 0, %p19;
+cvt.s64.s32 %rd58, %r195;
+add.s64 %rd59, %rd57, %rd58;
+shl.b64 %rd60, %rd59, 5;
+add.s32 %r196, %r1442, 3072;
+mad.lo.s32 %r197, %r177, -32, %r196;
+cvt.s64.s32 %rd61, %r197;
+add.s64 %rd62, %rd60, %rd61;
+shl.b64 %rd63, %rd62, 1;
+add.s64 %rd24, %rd7, %rd63;
+.loc	1 172 13
+shl.b32 %r198, %r177, 3;
+add.s32 %r199, %r196, %r198;
+.loc	1 29 32, function_name $L__info_string0, inlined_at 1 172 13
+shl.b32 %r200, %r199, 1;
+cvt.u64.u32 %rd64, %r200;
+add.s64 %rd65, %rd34, %rd64;
+cvt.u32.u64 %r89, %rd65;
+.loc	1 31 5, function_name $L__info_string1, inlined_at 1 172 13
+selp.b32 %r90, 16, 0, %p19;
+
+cp.async.cg.shared.global [%r89], [%rd24], 16, %r90;
+
+
+.loc	1 166 9
+add.s32 %r1442, %r1442, 4096;
+add.s32 %r20, %r1441, 512;
+setp.lt.s32 %p20, %r1441, -80;
+mov.u32 %r1441, %r20;
+@%p20 bra $L__BB0_6;
+
+$L__BB0_7:
+.loc	1 112 5
+and.b32 %r1251, %r1, 31;
+.loc	1 115 5
+mov.u32 %r1252, %ctaid.z;
+.loc	1 180 9
+
+cp.async.commit_group;
+
+
+
+cp.async.wait_group 0;
+
+
+.loc	1 196 5
+bar.sync 0;
+shl.b32 %r1253, %r1, 1;
+and.b32 %r1254, %r1253, 6;
+.loc	1 202 9
+shl.b32 %r21, %r1252, 5;
+or.b32 %r1255, %r21, %r1254;
+cvta.to.global.u64 %rd210, %rd6;
+mul.wide.s32 %rd211, %r1255, 2;
+add.s64 %rd212, %rd210, %rd211;
+ld.global.nc.u32 %r275, [%rd212];
+ld.global.nc.u32 %r285, [%rd212+16];
+ld.global.nc.u32 %r295, [%rd212+32];
+ld.global.nc.u32 %r305, [%rd212+48];
+.loc	1 210 9
+and.b32 %r1256, %r1, 15;
+.loc	1 112 5
+shr.s32 %r1257, %r1, 5;
+.loc	1 210 9
+shl.b32 %r1258, %r1257, 4;
+bfi.b32 %r1259, %r1257, %r1256, 4, 28;
+.loc	1 211 9
+shr.s32 %r1260, %r1259, 31;
+shr.u32 %r1261, %r1260, 28;
+add.s32 %r1262, %r1259, %r1261;
+shr.s32 %r1263, %r1262, 4;
+and.b32 %r1264, %r1262, -16;
+sub.s32 %r1265, %r1259, %r1264;
+.loc	1 212 9
+mad.lo.s32 %r1266, %r1263, 18, %r1265;
+shr.u32 %r1267, %r1251, 1;
+and.b32 %r1268, %r1267, 8;
+mad.lo.s32 %r1269, %r1266, 40, %r1268;
+.loc	1 216 5
+shl.b32 %r1270, %r1, 2;
+and.b32 %r1271, %r1270, 124;
+cvt.u64.u32 %rd213, %r1271;
+or.b64 %rd214, %rd213, 128;
+.loc	1 212 9
+.loc	1 29 32, function_name $L__info_string0, inlined_at 1 212 9
+shl.b32 %r1272, %r1269, 1;
+cvt.u64.u32 %rd215, %r1272;
+mov.u64 %rd216, _ZZ13conv_dl2_poolE4tile;
+add.s64 %rd217, %rd216, %rd215;
+.loc	1 238 9
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 238 9
+mul.lo.s32 %r1273, %r1252, 18432;
+cvt.s64.s32 %rd218, %r1273;
+or.b64 %rd219, %rd218, %rd213;
+add.s64 %rd66, %rd5, %rd219;
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 238 9
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r201, [%rd66];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 238 9
+or.b64 %rd220, %rd214, %rd218;
+add.s64 %rd67, %rd5, %rd220;
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 238 9
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r202, [%rd67];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 238 9
+add.s32 %r1274, %r1273, 4608;
+cvt.s64.s32 %rd221, %r1274;
+or.b64 %rd222, %rd221, %rd213;
+add.s64 %rd68, %rd5, %rd222;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r203, [%rd68];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 238 9
+or.b64 %rd223, %rd214, %rd221;
+add.s64 %rd69, %rd5, %rd223;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r204, [%rd69];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 238 9
+add.s32 %r1275, %r1273, 9216;
+cvt.s64.s32 %rd224, %r1275;
+or.b64 %rd225, %rd224, %rd213;
+add.s64 %rd70, %rd5, %rd225;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r205, [%rd70];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 238 9
+or.b64 %rd226, %rd214, %rd224;
+add.s64 %rd71, %rd5, %rd226;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r206, [%rd71];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 238 9
+add.s32 %r1276, %r1273, 13824;
+cvt.s64.s32 %rd227, %r1276;
+or.b64 %rd228, %rd227, %rd213;
+add.s64 %rd72, %rd5, %rd228;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r207, [%rd72];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 238 9
+or.b64 %rd229, %rd214, %rd227;
+add.s64 %rd73, %rd5, %rd229;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r208, [%rd73];
+
+.loc	1 29 32, function_name $L__info_string0, inlined_at 1 212 9
+cvt.u32.u64 %r221, %rd217;
+.loc	1 245 13
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b32 %r1277, %r1273, 256;
+cvt.s64.s32 %rd230, %r1277;
+or.b64 %rd231, %rd230, %rd213;
+add.s64 %rd74, %rd5, %rd231;
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r209, [%rd74];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd232, %rd214, %rd230;
+add.s64 %rd75, %rd5, %rd232;
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r210, [%rd75];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1278, %r1273, 4864;
+cvt.s64.s32 %rd233, %r1278;
+or.b64 %rd234, %rd233, %rd213;
+add.s64 %rd76, %rd5, %rd234;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r211, [%rd76];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd235, %rd214, %rd233;
+add.s64 %rd77, %rd5, %rd235;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r212, [%rd77];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1279, %r1273, 9472;
+cvt.s64.s32 %rd236, %r1279;
+or.b64 %rd237, %rd236, %rd213;
+add.s64 %rd78, %rd5, %rd237;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r213, [%rd78];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd238, %rd214, %rd236;
+add.s64 %rd79, %rd5, %rd238;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r214, [%rd79];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1280, %r1273, 14080;
+cvt.s64.s32 %rd239, %r1280;
+or.b64 %rd240, %rd239, %rd213;
+add.s64 %rd80, %rd5, %rd240;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r215, [%rd80];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd241, %rd214, %rd239;
+add.s64 %rd81, %rd5, %rd241;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r216, [%rd81];
+
+.loc	1 250 17
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r217,%r218,%r219,%r220}, [%r221];
+
+
+.loc	1 252 17
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+mov.u32 %r276, %r275;
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r217,%r218,%r219,%r220}, {%r201,%r202}, {%r275,%r276};
+
+
+mov.u32 %r286, %r285;
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r217,%r218,%r219,%r220}, {%r203,%r204}, {%r285,%r286};
+
+
+mov.u32 %r296, %r295;
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r217,%r218,%r219,%r220}, {%r205,%r206}, {%r295,%r296};
+
+
+mov.u32 %r306, %r305;
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r217,%r218,%r219,%r220}, {%r207,%r208}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b32 %r1281, %r1273, 512;
+cvt.s64.s32 %rd242, %r1281;
+or.b64 %rd243, %rd242, %rd213;
+add.s64 %rd82, %rd5, %rd243;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r262, [%rd82];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd244, %rd214, %rd242;
+add.s64 %rd83, %rd5, %rd244;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r263, [%rd83];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1282, %r1273, 5120;
+cvt.s64.s32 %rd245, %r1282;
+or.b64 %rd246, %rd245, %rd213;
+add.s64 %rd84, %rd5, %rd246;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r264, [%rd84];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd247, %rd214, %rd245;
+add.s64 %rd85, %rd5, %rd247;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r265, [%rd85];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1283, %r1273, 9728;
+cvt.s64.s32 %rd248, %r1283;
+or.b64 %rd249, %rd248, %rd213;
+add.s64 %rd86, %rd5, %rd249;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r266, [%rd86];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd250, %rd214, %rd248;
+add.s64 %rd87, %rd5, %rd250;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r267, [%rd87];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1284, %r1273, 14336;
+cvt.s64.s32 %rd251, %r1284;
+or.b64 %rd252, %rd251, %rd213;
+add.s64 %rd88, %rd5, %rd252;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r268, [%rd88];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd253, %rd214, %rd251;
+add.s64 %rd89, %rd5, %rd253;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r269, [%rd89];
+
+.loc	1 246 13
+add.s32 %r274, %r221, 32;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r270,%r271,%r272,%r273}, [%r274];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r270,%r271,%r272,%r273}, {%r209,%r210}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r270,%r271,%r272,%r273}, {%r211,%r212}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r270,%r271,%r272,%r273}, {%r213,%r214}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r270,%r271,%r272,%r273}, {%r215,%r216}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b32 %r1285, %r1273, 768;
+cvt.s64.s32 %rd254, %r1285;
+or.b64 %rd255, %rd254, %rd213;
+add.s64 %rd90, %rd5, %rd255;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r315, [%rd90];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd256, %rd214, %rd254;
+add.s64 %rd91, %rd5, %rd256;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r316, [%rd91];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1286, %r1273, 5376;
+cvt.s64.s32 %rd257, %r1286;
+or.b64 %rd258, %rd257, %rd213;
+add.s64 %rd92, %rd5, %rd258;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r317, [%rd92];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd259, %rd214, %rd257;
+add.s64 %rd93, %rd5, %rd259;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r318, [%rd93];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1287, %r1273, 9984;
+cvt.s64.s32 %rd260, %r1287;
+or.b64 %rd261, %rd260, %rd213;
+add.s64 %rd94, %rd5, %rd261;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r319, [%rd94];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd262, %rd214, %rd260;
+add.s64 %rd95, %rd5, %rd262;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r320, [%rd95];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1288, %r1273, 14592;
+cvt.s64.s32 %rd263, %r1288;
+or.b64 %rd264, %rd263, %rd213;
+add.s64 %rd96, %rd5, %rd264;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r321, [%rd96];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd265, %rd214, %rd263;
+add.s64 %rd97, %rd5, %rd265;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r322, [%rd97];
+
+.loc	1 250 17
+add.s32 %r327, %r221, 80;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r323,%r324,%r325,%r326}, [%r327];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r323,%r324,%r325,%r326}, {%r262,%r263}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r323,%r324,%r325,%r326}, {%r264,%r265}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r323,%r324,%r325,%r326}, {%r266,%r267}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r323,%r324,%r325,%r326}, {%r268,%r269}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b32 %r1289, %r1273, 1024;
+cvt.s64.s32 %rd266, %r1289;
+or.b64 %rd267, %rd266, %rd213;
+add.s64 %rd98, %rd5, %rd267;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r368, [%rd98];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd268, %rd214, %rd266;
+add.s64 %rd99, %rd5, %rd268;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r369, [%rd99];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1290, %r1273, 5632;
+cvt.s64.s32 %rd269, %r1290;
+or.b64 %rd270, %rd269, %rd213;
+add.s64 %rd100, %rd5, %rd270;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r370, [%rd100];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd271, %rd214, %rd269;
+add.s64 %rd101, %rd5, %rd271;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r371, [%rd101];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1291, %r1273, 10240;
+cvt.s64.s32 %rd272, %r1291;
+or.b64 %rd273, %rd272, %rd213;
+add.s64 %rd102, %rd5, %rd273;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r372, [%rd102];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd274, %rd214, %rd272;
+add.s64 %rd103, %rd5, %rd274;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r373, [%rd103];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1292, %r1273, 14848;
+cvt.s64.s32 %rd275, %r1292;
+or.b64 %rd276, %rd275, %rd213;
+add.s64 %rd104, %rd5, %rd276;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r374, [%rd104];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd277, %rd214, %rd275;
+add.s64 %rd105, %rd5, %rd277;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r375, [%rd105];
+
+.loc	1 250 17
+add.s32 %r380, %r221, 112;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r376,%r377,%r378,%r379}, [%r380];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r376,%r377,%r378,%r379}, {%r315,%r316}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r376,%r377,%r378,%r379}, {%r317,%r318}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r376,%r377,%r378,%r379}, {%r319,%r320}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r376,%r377,%r378,%r379}, {%r321,%r322}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b32 %r1293, %r1273, 1280;
+cvt.s64.s32 %rd278, %r1293;
+or.b64 %rd279, %rd278, %rd213;
+add.s64 %rd106, %rd5, %rd279;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r421, [%rd106];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd280, %rd214, %rd278;
+add.s64 %rd107, %rd5, %rd280;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r422, [%rd107];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1294, %r1273, 5888;
+cvt.s64.s32 %rd281, %r1294;
+or.b64 %rd282, %rd281, %rd213;
+add.s64 %rd108, %rd5, %rd282;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r423, [%rd108];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd283, %rd214, %rd281;
+add.s64 %rd109, %rd5, %rd283;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r424, [%rd109];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1295, %r1273, 10496;
+cvt.s64.s32 %rd284, %r1295;
+or.b64 %rd285, %rd284, %rd213;
+add.s64 %rd110, %rd5, %rd285;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r425, [%rd110];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd286, %rd214, %rd284;
+add.s64 %rd111, %rd5, %rd286;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r426, [%rd111];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1296, %r1273, 15104;
+cvt.s64.s32 %rd287, %r1296;
+or.b64 %rd288, %rd287, %rd213;
+add.s64 %rd112, %rd5, %rd288;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r427, [%rd112];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd289, %rd214, %rd287;
+add.s64 %rd113, %rd5, %rd289;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r428, [%rd113];
+
+.loc	1 250 17
+add.s32 %r433, %r221, 160;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r429,%r430,%r431,%r432}, [%r433];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r429,%r430,%r431,%r432}, {%r368,%r369}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r429,%r430,%r431,%r432}, {%r370,%r371}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r429,%r430,%r431,%r432}, {%r372,%r373}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r429,%r430,%r431,%r432}, {%r374,%r375}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b32 %r1297, %r1273, 1536;
+cvt.s64.s32 %rd290, %r1297;
+or.b64 %rd291, %rd290, %rd213;
+add.s64 %rd114, %rd5, %rd291;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r474, [%rd114];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd292, %rd214, %rd290;
+add.s64 %rd115, %rd5, %rd292;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r475, [%rd115];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1298, %r1273, 6144;
+cvt.s64.s32 %rd293, %r1298;
+or.b64 %rd294, %rd293, %rd213;
+add.s64 %rd116, %rd5, %rd294;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r476, [%rd116];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd295, %rd214, %rd293;
+add.s64 %rd117, %rd5, %rd295;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r477, [%rd117];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1299, %r1273, 10752;
+cvt.s64.s32 %rd296, %r1299;
+or.b64 %rd297, %rd296, %rd213;
+add.s64 %rd118, %rd5, %rd297;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r478, [%rd118];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd298, %rd214, %rd296;
+add.s64 %rd119, %rd5, %rd298;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r479, [%rd119];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1300, %r1273, 15360;
+cvt.s64.s32 %rd299, %r1300;
+or.b64 %rd300, %rd299, %rd213;
+add.s64 %rd120, %rd5, %rd300;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r480, [%rd120];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd301, %rd214, %rd299;
+add.s64 %rd121, %rd5, %rd301;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r481, [%rd121];
+
+.loc	1 250 17
+add.s32 %r486, %r221, 192;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r482,%r483,%r484,%r485}, [%r486];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r482,%r483,%r484,%r485}, {%r421,%r422}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r482,%r483,%r484,%r485}, {%r423,%r424}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r482,%r483,%r484,%r485}, {%r425,%r426}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r482,%r483,%r484,%r485}, {%r427,%r428}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b32 %r1301, %r1273, 1792;
+cvt.s64.s32 %rd302, %r1301;
+or.b64 %rd303, %rd302, %rd213;
+add.s64 %rd122, %rd5, %rd303;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r527, [%rd122];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd304, %rd214, %rd302;
+add.s64 %rd123, %rd5, %rd304;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r528, [%rd123];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1302, %r1273, 6400;
+cvt.s64.s32 %rd305, %r1302;
+or.b64 %rd306, %rd305, %rd213;
+add.s64 %rd124, %rd5, %rd306;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r529, [%rd124];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd307, %rd214, %rd305;
+add.s64 %rd125, %rd5, %rd307;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r530, [%rd125];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1303, %r1273, 11008;
+cvt.s64.s32 %rd308, %r1303;
+or.b64 %rd309, %rd308, %rd213;
+add.s64 %rd126, %rd5, %rd309;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r531, [%rd126];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd310, %rd214, %rd308;
+add.s64 %rd127, %rd5, %rd310;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r532, [%rd127];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1304, %r1273, 15616;
+cvt.s64.s32 %rd311, %r1304;
+or.b64 %rd312, %rd311, %rd213;
+add.s64 %rd128, %rd5, %rd312;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r533, [%rd128];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd313, %rd214, %rd311;
+add.s64 %rd129, %rd5, %rd313;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r534, [%rd129];
+
+.loc	1 250 17
+add.s32 %r539, %r221, 1440;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r535,%r536,%r537,%r538}, [%r539];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r535,%r536,%r537,%r538}, {%r474,%r475}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r535,%r536,%r537,%r538}, {%r476,%r477}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r535,%r536,%r537,%r538}, {%r478,%r479}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r535,%r536,%r537,%r538}, {%r480,%r481}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1305, %r1273, 2048;
+cvt.s64.s32 %rd314, %r1305;
+or.b64 %rd315, %rd314, %rd213;
+add.s64 %rd130, %rd5, %rd315;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r580, [%rd130];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd316, %rd214, %rd314;
+add.s64 %rd131, %rd5, %rd316;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r581, [%rd131];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1306, %r1273, 6656;
+cvt.s64.s32 %rd317, %r1306;
+or.b64 %rd318, %rd317, %rd213;
+add.s64 %rd132, %rd5, %rd318;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r582, [%rd132];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd319, %rd214, %rd317;
+add.s64 %rd133, %rd5, %rd319;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r583, [%rd133];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1307, %r1273, 11264;
+cvt.s64.s32 %rd320, %r1307;
+or.b64 %rd321, %rd320, %rd213;
+add.s64 %rd134, %rd5, %rd321;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r584, [%rd134];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd322, %rd214, %rd320;
+add.s64 %rd135, %rd5, %rd322;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r585, [%rd135];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1308, %r1273, 15872;
+cvt.s64.s32 %rd323, %r1308;
+or.b64 %rd324, %rd323, %rd213;
+add.s64 %rd136, %rd5, %rd324;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r586, [%rd136];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd325, %rd214, %rd323;
+add.s64 %rd137, %rd5, %rd325;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r587, [%rd137];
+
+.loc	1 250 17
+add.s32 %r592, %r221, 1472;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r588,%r589,%r590,%r591}, [%r592];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r588,%r589,%r590,%r591}, {%r527,%r528}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r588,%r589,%r590,%r591}, {%r529,%r530}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r588,%r589,%r590,%r591}, {%r531,%r532}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r588,%r589,%r590,%r591}, {%r533,%r534}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1309, %r1273, 2304;
+cvt.s64.s32 %rd326, %r1309;
+or.b64 %rd327, %rd326, %rd213;
+add.s64 %rd138, %rd5, %rd327;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r633, [%rd138];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd328, %rd214, %rd326;
+add.s64 %rd139, %rd5, %rd328;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r634, [%rd139];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1310, %r1273, 6912;
+cvt.s64.s32 %rd329, %r1310;
+or.b64 %rd330, %rd329, %rd213;
+add.s64 %rd140, %rd5, %rd330;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r635, [%rd140];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd331, %rd214, %rd329;
+add.s64 %rd141, %rd5, %rd331;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r636, [%rd141];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1311, %r1273, 11520;
+cvt.s64.s32 %rd332, %r1311;
+or.b64 %rd333, %rd332, %rd213;
+add.s64 %rd142, %rd5, %rd333;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r637, [%rd142];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd334, %rd214, %rd332;
+add.s64 %rd143, %rd5, %rd334;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r638, [%rd143];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1312, %r1273, 16128;
+cvt.s64.s32 %rd335, %r1312;
+or.b64 %rd336, %rd335, %rd213;
+add.s64 %rd144, %rd5, %rd336;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r639, [%rd144];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd337, %rd214, %rd335;
+add.s64 %rd145, %rd5, %rd337;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r640, [%rd145];
+
+.loc	1 250 17
+add.s32 %r645, %r221, 1520;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r641,%r642,%r643,%r644}, [%r645];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r641,%r642,%r643,%r644}, {%r580,%r581}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r641,%r642,%r643,%r644}, {%r582,%r583}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r641,%r642,%r643,%r644}, {%r584,%r585}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r641,%r642,%r643,%r644}, {%r586,%r587}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1313, %r1273, 2560;
+cvt.s64.s32 %rd338, %r1313;
+or.b64 %rd339, %rd338, %rd213;
+add.s64 %rd146, %rd5, %rd339;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r686, [%rd146];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd340, %rd214, %rd338;
+add.s64 %rd147, %rd5, %rd340;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r687, [%rd147];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1314, %r1273, 7168;
+cvt.s64.s32 %rd341, %r1314;
+or.b64 %rd342, %rd341, %rd213;
+add.s64 %rd148, %rd5, %rd342;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r688, [%rd148];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd343, %rd214, %rd341;
+add.s64 %rd149, %rd5, %rd343;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r689, [%rd149];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1315, %r1273, 11776;
+cvt.s64.s32 %rd344, %r1315;
+or.b64 %rd345, %rd344, %rd213;
+add.s64 %rd150, %rd5, %rd345;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r690, [%rd150];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd346, %rd214, %rd344;
+add.s64 %rd151, %rd5, %rd346;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r691, [%rd151];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1316, %r1273, 16384;
+cvt.s64.s32 %rd347, %r1316;
+or.b64 %rd348, %rd347, %rd213;
+add.s64 %rd152, %rd5, %rd348;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r692, [%rd152];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd349, %rd214, %rd347;
+add.s64 %rd153, %rd5, %rd349;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r693, [%rd153];
+
+.loc	1 250 17
+add.s32 %r698, %r221, 1552;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r694,%r695,%r696,%r697}, [%r698];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r694,%r695,%r696,%r697}, {%r633,%r634}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r694,%r695,%r696,%r697}, {%r635,%r636}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r694,%r695,%r696,%r697}, {%r637,%r638}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r694,%r695,%r696,%r697}, {%r639,%r640}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1317, %r1273, 2816;
+cvt.s64.s32 %rd350, %r1317;
+or.b64 %rd351, %rd350, %rd213;
+add.s64 %rd154, %rd5, %rd351;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r739, [%rd154];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd352, %rd214, %rd350;
+add.s64 %rd155, %rd5, %rd352;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r740, [%rd155];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1318, %r1273, 7424;
+cvt.s64.s32 %rd353, %r1318;
+or.b64 %rd354, %rd353, %rd213;
+add.s64 %rd156, %rd5, %rd354;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r741, [%rd156];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd355, %rd214, %rd353;
+add.s64 %rd157, %rd5, %rd355;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r742, [%rd157];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1319, %r1273, 12032;
+cvt.s64.s32 %rd356, %r1319;
+or.b64 %rd357, %rd356, %rd213;
+add.s64 %rd158, %rd5, %rd357;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r743, [%rd158];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd358, %rd214, %rd356;
+add.s64 %rd159, %rd5, %rd358;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r744, [%rd159];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1320, %r1273, 16640;
+cvt.s64.s32 %rd359, %r1320;
+or.b64 %rd360, %rd359, %rd213;
+add.s64 %rd160, %rd5, %rd360;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r745, [%rd160];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd361, %rd214, %rd359;
+add.s64 %rd161, %rd5, %rd361;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r746, [%rd161];
+
+.loc	1 250 17
+add.s32 %r751, %r221, 1600;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r747,%r748,%r749,%r750}, [%r751];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r747,%r748,%r749,%r750}, {%r686,%r687}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r747,%r748,%r749,%r750}, {%r688,%r689}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r747,%r748,%r749,%r750}, {%r690,%r691}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r747,%r748,%r749,%r750}, {%r692,%r693}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1321, %r1273, 3072;
+cvt.s64.s32 %rd362, %r1321;
+or.b64 %rd363, %rd362, %rd213;
+add.s64 %rd162, %rd5, %rd363;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r792, [%rd162];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd364, %rd214, %rd362;
+add.s64 %rd163, %rd5, %rd364;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r793, [%rd163];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1322, %r1273, 7680;
+cvt.s64.s32 %rd365, %r1322;
+or.b64 %rd366, %rd365, %rd213;
+add.s64 %rd164, %rd5, %rd366;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r794, [%rd164];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd367, %rd214, %rd365;
+add.s64 %rd165, %rd5, %rd367;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r795, [%rd165];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1323, %r1273, 12288;
+cvt.s64.s32 %rd368, %r1323;
+or.b64 %rd369, %rd368, %rd213;
+add.s64 %rd166, %rd5, %rd369;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r796, [%rd166];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd370, %rd214, %rd368;
+add.s64 %rd167, %rd5, %rd370;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r797, [%rd167];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1324, %r1273, 16896;
+cvt.s64.s32 %rd371, %r1324;
+or.b64 %rd372, %rd371, %rd213;
+add.s64 %rd168, %rd5, %rd372;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r798, [%rd168];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd373, %rd214, %rd371;
+add.s64 %rd169, %rd5, %rd373;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r799, [%rd169];
+
+.loc	1 250 17
+add.s32 %r804, %r221, 1632;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r800,%r801,%r802,%r803}, [%r804];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r800,%r801,%r802,%r803}, {%r739,%r740}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r800,%r801,%r802,%r803}, {%r741,%r742}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r800,%r801,%r802,%r803}, {%r743,%r744}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r800,%r801,%r802,%r803}, {%r745,%r746}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1325, %r1273, 3328;
+cvt.s64.s32 %rd374, %r1325;
+or.b64 %rd375, %rd374, %rd213;
+add.s64 %rd170, %rd5, %rd375;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r845, [%rd170];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd376, %rd214, %rd374;
+add.s64 %rd171, %rd5, %rd376;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r846, [%rd171];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1326, %r1273, 7936;
+cvt.s64.s32 %rd377, %r1326;
+or.b64 %rd378, %rd377, %rd213;
+add.s64 %rd172, %rd5, %rd378;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r847, [%rd172];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd379, %rd214, %rd377;
+add.s64 %rd173, %rd5, %rd379;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r848, [%rd173];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1327, %r1273, 12544;
+cvt.s64.s32 %rd380, %r1327;
+or.b64 %rd381, %rd380, %rd213;
+add.s64 %rd174, %rd5, %rd381;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r849, [%rd174];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd382, %rd214, %rd380;
+add.s64 %rd175, %rd5, %rd382;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r850, [%rd175];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1328, %r1273, 17152;
+cvt.s64.s32 %rd383, %r1328;
+or.b64 %rd384, %rd383, %rd213;
+add.s64 %rd176, %rd5, %rd384;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r851, [%rd176];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd385, %rd214, %rd383;
+add.s64 %rd177, %rd5, %rd385;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r852, [%rd177];
+
+.loc	1 250 17
+add.s32 %r857, %r221, 2880;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r853,%r854,%r855,%r856}, [%r857];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r853,%r854,%r855,%r856}, {%r792,%r793}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r853,%r854,%r855,%r856}, {%r794,%r795}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r853,%r854,%r855,%r856}, {%r796,%r797}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r853,%r854,%r855,%r856}, {%r798,%r799}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1329, %r1273, 3584;
+cvt.s64.s32 %rd386, %r1329;
+or.b64 %rd387, %rd386, %rd213;
+add.s64 %rd178, %rd5, %rd387;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r898, [%rd178];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd388, %rd214, %rd386;
+add.s64 %rd179, %rd5, %rd388;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r899, [%rd179];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1330, %r1273, 8192;
+cvt.s64.s32 %rd389, %r1330;
+or.b64 %rd390, %rd389, %rd213;
+add.s64 %rd180, %rd5, %rd390;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r900, [%rd180];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd391, %rd214, %rd389;
+add.s64 %rd181, %rd5, %rd391;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r901, [%rd181];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1331, %r1273, 12800;
+cvt.s64.s32 %rd392, %r1331;
+or.b64 %rd393, %rd392, %rd213;
+add.s64 %rd182, %rd5, %rd393;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r902, [%rd182];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd394, %rd214, %rd392;
+add.s64 %rd183, %rd5, %rd394;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r903, [%rd183];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1332, %r1273, 17408;
+cvt.s64.s32 %rd395, %r1332;
+or.b64 %rd396, %rd395, %rd213;
+add.s64 %rd184, %rd5, %rd396;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r904, [%rd184];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd397, %rd214, %rd395;
+add.s64 %rd185, %rd5, %rd397;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r905, [%rd185];
+
+.loc	1 250 17
+add.s32 %r910, %r221, 2912;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r906,%r907,%r908,%r909}, [%r910];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r906,%r907,%r908,%r909}, {%r845,%r846}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r906,%r907,%r908,%r909}, {%r847,%r848}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r906,%r907,%r908,%r909}, {%r849,%r850}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r906,%r907,%r908,%r909}, {%r851,%r852}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1333, %r1273, 3840;
+cvt.s64.s32 %rd398, %r1333;
+or.b64 %rd399, %rd398, %rd213;
+add.s64 %rd186, %rd5, %rd399;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r951, [%rd186];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd400, %rd214, %rd398;
+add.s64 %rd187, %rd5, %rd400;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r952, [%rd187];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1334, %r1273, 8448;
+cvt.s64.s32 %rd401, %r1334;
+or.b64 %rd402, %rd401, %rd213;
+add.s64 %rd188, %rd5, %rd402;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r953, [%rd188];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd403, %rd214, %rd401;
+add.s64 %rd189, %rd5, %rd403;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r954, [%rd189];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1335, %r1273, 13056;
+cvt.s64.s32 %rd404, %r1335;
+or.b64 %rd405, %rd404, %rd213;
+add.s64 %rd190, %rd5, %rd405;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r955, [%rd190];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd406, %rd214, %rd404;
+add.s64 %rd191, %rd5, %rd406;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r956, [%rd191];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1336, %r1273, 17664;
+cvt.s64.s32 %rd407, %r1336;
+or.b64 %rd408, %rd407, %rd213;
+add.s64 %rd192, %rd5, %rd408;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r957, [%rd192];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd409, %rd214, %rd407;
+add.s64 %rd193, %rd5, %rd409;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r958, [%rd193];
+
+.loc	1 250 17
+add.s32 %r963, %r221, 2960;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r959,%r960,%r961,%r962}, [%r963];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r959,%r960,%r961,%r962}, {%r898,%r899}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r959,%r960,%r961,%r962}, {%r900,%r901}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r959,%r960,%r961,%r962}, {%r902,%r903}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r959,%r960,%r961,%r962}, {%r904,%r905}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1337, %r1273, 4096;
+cvt.s64.s32 %rd410, %r1337;
+or.b64 %rd411, %rd410, %rd213;
+add.s64 %rd194, %rd5, %rd411;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1004, [%rd194];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd412, %rd214, %rd410;
+add.s64 %rd195, %rd5, %rd412;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1005, [%rd195];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1338, %r1273, 8704;
+cvt.s64.s32 %rd413, %r1338;
+or.b64 %rd414, %rd413, %rd213;
+add.s64 %rd196, %rd5, %rd414;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1006, [%rd196];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd415, %rd214, %rd413;
+add.s64 %rd197, %rd5, %rd415;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1007, [%rd197];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1339, %r1273, 13312;
+cvt.s64.s32 %rd416, %r1339;
+or.b64 %rd417, %rd416, %rd213;
+add.s64 %rd198, %rd5, %rd417;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1008, [%rd198];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd418, %rd214, %rd416;
+add.s64 %rd199, %rd5, %rd418;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1009, [%rd199];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1340, %r1273, 17920;
+cvt.s64.s32 %rd419, %r1340;
+or.b64 %rd420, %rd419, %rd213;
+add.s64 %rd200, %rd5, %rd420;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1010, [%rd200];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd421, %rd214, %rd419;
+add.s64 %rd201, %rd5, %rd421;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1011, [%rd201];
+
+.loc	1 250 17
+add.s32 %r1016, %r221, 2992;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r1012,%r1013,%r1014,%r1015}, [%r1016];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r1012,%r1013,%r1014,%r1015}, {%r951,%r952}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r1012,%r1013,%r1014,%r1015}, {%r953,%r954}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r1012,%r1013,%r1014,%r1015}, {%r955,%r956}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r1012,%r1013,%r1014,%r1015}, {%r957,%r958}, {%r305,%r306};
+
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1341, %r1273, 4352;
+cvt.s64.s32 %rd422, %r1341;
+or.b64 %rd423, %rd422, %rd213;
+add.s64 %rd202, %rd5, %rd423;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1057, [%rd202];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd424, %rd214, %rd422;
+add.s64 %rd203, %rd5, %rd424;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1058, [%rd203];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1342, %r1273, 8960;
+cvt.s64.s32 %rd425, %r1342;
+or.b64 %rd426, %rd425, %rd213;
+add.s64 %rd204, %rd5, %rd426;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1059, [%rd204];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd427, %rd214, %rd425;
+add.s64 %rd205, %rd5, %rd427;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1060, [%rd205];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1343, %r1273, 13568;
+cvt.s64.s32 %rd428, %r1343;
+or.b64 %rd429, %rd428, %rd213;
+add.s64 %rd206, %rd5, %rd429;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1061, [%rd206];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd430, %rd214, %rd428;
+add.s64 %rd207, %rd5, %rd430;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1062, [%rd207];
+
+.loc	1 233 17, function_name $L__info_string2, inlined_at 1 245 13
+add.s32 %r1344, %r1273, 18176;
+cvt.s64.s32 %rd431, %r1344;
+or.b64 %rd432, %rd431, %rd213;
+add.s64 %rd208, %rd5, %rd432;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1063, [%rd208];
+
+.loc	1 234 17, function_name $L__info_string2, inlined_at 1 245 13
+or.b64 %rd433, %rd214, %rd431;
+add.s64 %rd209, %rd5, %rd433;
+.loc	1 49 32, function_name $L__info_string3, inlined_at 1 234 17
+
+ld.global.nc.u32 %r1064, [%rd209];
+
+.loc	1 250 17
+add.s32 %r1069, %r221, 3040;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r1065,%r1066,%r1067,%r1068}, [%r1069];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r1065,%r1066,%r1067,%r1068}, {%r1004,%r1005}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r1065,%r1066,%r1067,%r1068}, {%r1006,%r1007}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r1065,%r1066,%r1067,%r1068}, {%r1008,%r1009}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r1065,%r1066,%r1067,%r1068}, {%r1010,%r1011}, {%r305,%r306};
+
+
+.loc	1 250 17
+add.s32 %r1114, %r221, 3072;
+.loc	1 34 5, function_name $L__info_string4, inlined_at 1 250 17
+
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r1110,%r1111,%r1112,%r1113}, [%r1114];
+
+
+.loc	1 37 5, function_name $L__info_string5, inlined_at 1 252 17
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r275,%r276}, {%r1110,%r1111,%r1112,%r1113}, {%r1057,%r1058}, {%r275,%r276};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r285,%r286}, {%r1110,%r1111,%r1112,%r1113}, {%r1059,%r1060}, {%r285,%r286};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r295,%r296}, {%r1110,%r1111,%r1112,%r1113}, {%r1061,%r1062}, {%r295,%r296};
+
+
+
+mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%r305,%r306}, {%r1110,%r1111,%r1112,%r1113}, {%r1063,%r1064}, {%r305,%r306};
+
+
+shr.u32 %r1345, %r1251, 2;
+or.b32 %r1346, %r1258, %r1345;
+mul.lo.s32 %r1347, %r1346, 40;
+or.b32 %r1348, %r1347, %r1254;
+.loc	1 321 17
+.loc	1 44 5, function_name $L__info_string6, inlined_at 1 321 17
+.loc	1 39 32, function_name $L__info_string7, inlined_at 1 44 5
+mov.u32 %r1241, 555688223;
+
+mul.f16x2 %r1155, %r275, %r1241;
+
+.loc	1 45 5, function_name $L__info_string6, inlined_at 1 321 17
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 45 5
+
+max.f16x2 %r1158, %r1155, %r275;
+
+.loc	1 46 5, function_name $L__info_string6, inlined_at 1 321 17
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 46 5
+mov.u32 %r1247, -973027840;
+
+max.f16x2 %r1161, %r1158, %r1247;
+
+.loc	1 47 5, function_name $L__info_string6, inlined_at 1 321 17
+.loc	1 42 32, function_name $L__info_string9, inlined_at 1 47 5
+mov.u32 %r1250, 1174423040;
+
+min.f16x2 %r1164, %r1161, %r1250;
+
+.loc	1 321 17
+mul.wide.s32 %rd434, %r1348, 2;
+mov.u64 %rd435, _ZZ13conv_dl2_poolE5ctile;
+add.s64 %rd436, %rd435, %rd434;
+st.shared.u32 [%rd436], %r1164;
+.loc	1 39 32, function_name $L__info_string7, inlined_at 1 44 5
+
+mul.f16x2 %r1167, %r285, %r1241;
+
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 45 5
+
+max.f16x2 %r1170, %r1167, %r285;
+
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 46 5
+
+max.f16x2 %r1173, %r1170, %r1247;
+
+.loc	1 42 32, function_name $L__info_string9, inlined_at 1 47 5
+
+min.f16x2 %r1176, %r1173, %r1250;
+
+.loc	1 321 17
+st.shared.u32 [%rd436+16], %r1176;
+.loc	1 39 32, function_name $L__info_string7, inlined_at 1 44 5
+
+mul.f16x2 %r1179, %r295, %r1241;
+
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 45 5
+
+max.f16x2 %r1182, %r1179, %r295;
+
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 46 5
+
+max.f16x2 %r1185, %r1182, %r1247;
+
+.loc	1 42 32, function_name $L__info_string9, inlined_at 1 47 5
+
+min.f16x2 %r1188, %r1185, %r1250;
+
+.loc	1 321 17
+st.shared.u32 [%rd436+32], %r1188;
+.loc	1 39 32, function_name $L__info_string7, inlined_at 1 44 5
+
+mul.f16x2 %r1191, %r305, %r1241;
+
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 45 5
+
+max.f16x2 %r1194, %r1191, %r305;
+
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 46 5
+
+max.f16x2 %r1197, %r1194, %r1247;
+
+.loc	1 42 32, function_name $L__info_string9, inlined_at 1 47 5
+
+min.f16x2 %r1200, %r1197, %r1250;
+
+.loc	1 321 17
+st.shared.u32 [%rd436+48], %r1200;
+.loc	1 39 32, function_name $L__info_string7, inlined_at 1 44 5
+
+mul.f16x2 %r1203, %r276, %r1241;
+
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 45 5
+
+max.f16x2 %r1206, %r1203, %r276;
+
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 46 5
+
+max.f16x2 %r1209, %r1206, %r1247;
+
+.loc	1 42 32, function_name $L__info_string9, inlined_at 1 47 5
+
+min.f16x2 %r1212, %r1209, %r1250;
+
+.loc	1 321 17
+st.shared.u32 [%rd436+640], %r1212;
+.loc	1 39 32, function_name $L__info_string7, inlined_at 1 44 5
+
+mul.f16x2 %r1215, %r286, %r1241;
+
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 45 5
+
+max.f16x2 %r1218, %r1215, %r286;
+
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 46 5
+
+max.f16x2 %r1221, %r1218, %r1247;
+
+.loc	1 42 32, function_name $L__info_string9, inlined_at 1 47 5
+
+min.f16x2 %r1224, %r1221, %r1250;
+
+.loc	1 321 17
+st.shared.u32 [%rd436+656], %r1224;
+.loc	1 39 32, function_name $L__info_string7, inlined_at 1 44 5
+
+mul.f16x2 %r1227, %r296, %r1241;
+
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 45 5
+
+max.f16x2 %r1230, %r1227, %r296;
+
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 46 5
+
+max.f16x2 %r1233, %r1230, %r1247;
+
+.loc	1 42 32, function_name $L__info_string9, inlined_at 1 47 5
+
+min.f16x2 %r1236, %r1233, %r1250;
+
+.loc	1 321 17
+st.shared.u32 [%rd436+672], %r1236;
+.loc	1 39 32, function_name $L__info_string7, inlined_at 1 44 5
+
+mul.f16x2 %r1239, %r306, %r1241;
+
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 45 5
+
+max.f16x2 %r1242, %r1239, %r306;
+
+.loc	1 41 32, function_name $L__info_string8, inlined_at 1 46 5
+
+max.f16x2 %r1245, %r1242, %r1247;
+
+.loc	1 42 32, function_name $L__info_string9, inlined_at 1 47 5
+
+min.f16x2 %r1248, %r1245, %r1250;
+
+.loc	1 321 17
+st.shared.u32 [%rd436+688], %r1248;
+.loc	1 324 5
+bar.sync 0;
+.loc	1 328 9
+setp.gt.s32 %p21, %r1, 255;
+@%p21 bra $L__BB0_19;
+
+.loc	1 112 5
+mov.u32 %r1446, %tid.x;
+.loc	1 114 5
+mov.u32 %r1433, %ctaid.x;
+shl.b32 %r1432, %r1433, 4;
+mov.u32 %r1431, %ctaid.y;
+shl.b32 %r1430, %r1431, 2;
+shr.u32 %r1349, %r1430, 31;
+add.s32 %r1350, %r1430, %r1349;
+shr.s32 %r22, %r1350, 1;
+shr.u32 %r1351, %r1432, 31;
+add.s32 %r1352, %r1432, %r1351;
+shr.s32 %r23, %r1352, 1;
+cvt.s64.s32 %rd3, %r48;
+cvt.s64.s32 %rd4, %r21;
+.loc	1 332 13
+max.s32 %r1353, %r1446, 128;
+add.s32 %r1354, %r1353, 127;
+sub.s32 %r24, %r1354, %r1446;
+and.b32 %r1355, %r24, 128;
+setp.ne.s32 %p22, %r1355, 0;
+@%p22 bra $L__BB0_12;
+
+.loc	1 112 5
+mov.u32 %r1435, %tid.x;
+.loc	1 329 13
+shr.s32 %r1356, %r1435, 31;
+shr.u32 %r1357, %r1356, 28;
+add.s32 %r1358, %r1435, %r1357;
+shr.s32 %r25, %r1358, 4;
+.loc	1 330 13
+shr.u32 %r1359, %r1356, 25;
+add.s32 %r1360, %r1435, %r1359;
+shr.s32 %r26, %r1360, 7;
+shl.b32 %r1361, %r26, 3;
+sub.s32 %r27, %r25, %r1361;
+.loc	1 331 13
+add.s32 %r28, %r26, %r22;
+add.s32 %r29, %r27, %r23;
+.loc	1 332 13
+setp.ge.s32 %p23, %r28, %r47;
+setp.ge.s32 %p24, %r29, %r48;
+or.pred %p25, %p23, %p24;
+@%p25 bra $L__BB0_11;
+
+.loc	1 112 5
+mov.u32 %r1437, %tid.x;
+.loc	1 333 17
+shl.b32 %r1374, %r26, 5;
+shl.b32 %r1375, %r27, 1;
+add.s32 %r1376, %r1375, %r1374;
+.loc	1 329 13
+shl.b32 %r1377, %r25, 4;
+sub.s32 %r1378, %r1437, %r1377;
+.loc	1 333 17
+shl.b32 %r1379, %r1378, 1;
+mad.lo.s32 %r1380, %r1376, 40, %r1379;
+mul.wide.s32 %rd437, %r1380, 2;
+add.s64 %rd439, %rd435, %rd437;
+.loc	1 334 17
+ld.shared.u32 %r1363, [%rd439];
+ld.shared.u32 %r1364, [%rd439+80];
+ld.shared.u32 %r1367, [%rd439+1280];
+ld.shared.u32 %r1370, [%rd439+1360];
+.loc	1 335 17
+.loc	1 40 32, function_name $L__info_string10, inlined_at 1 335 17
+
+add.f16x2 %r1362, %r1363, %r1364;
+
+.loc	1 335 17
+.loc	1 40 32, function_name $L__info_string10, inlined_at 1 335 17
+
+add.f16x2 %r1365, %r1362, %r1367;
+
+.loc	1 335 17
+.loc	1 40 32, function_name $L__info_string10, inlined_at 1 335 17
+
+add.f16x2 %r1368, %r1365, %r1370;
+
+.loc	1 336 17
+.loc	1 39 32, function_name $L__info_string7, inlined_at 1 336 17
+mov.u32 %r1373, 872428544;
+
+mul.f16x2 %r1371, %r1368, %r1373;
+
+.loc	1 337 17
+cvt.s64.s32 %rd440, %r28;
+mul.lo.s64 %rd441, %rd440, %rd3;
+cvt.s64.s32 %rd442, %r29;
+add.s64 %rd443, %rd441, %rd442;
+shl.b64 %rd444, %rd443, 5;
+cvt.s64.s32 %rd445, %r1379;
+add.s64 %rd446, %rd445, %rd4;
+add.s64 %rd447, %rd446, %rd444;
+shl.b64 %rd448, %rd447, 1;
+add.s64 %rd449, %rd1, %rd448;
+st.global.u32 [%rd449], %r1371;
+
+$L__BB0_11:
+.loc	1 112 5
+mov.u32 %r1436, %tid.x;
+.loc	1 328 38
+add.s32 %r1446, %r1436, 128;
+
+$L__BB0_12:
+.loc	1 332 13
+and.b32 %r1381, %r24, -128;
+setp.eq.s32 %p26, %r1381, 0;
+@%p26 bra $L__BB0_19;
+
+shl.b32 %r1445, %r1446, 1;
+
+$L__BB0_14:
+.loc	1 330 13
+shr.s32 %r1382, %r1446, 31;
+shr.u32 %r1383, %r1382, 25;
+add.s32 %r1384, %r1446, %r1383;
+shr.s32 %r35, %r1384, 7;
+shl.b32 %r1385, %r35, 3;
+.loc	1 329 13
+shr.u32 %r1386, %r1382, 28;
+add.s32 %r1387, %r1446, %r1386;
+shr.s32 %r36, %r1387, 4;
+.loc	1 330 13
+sub.s32 %r1388, %r36, %r1385;
+.loc	1 331 13
+add.s32 %r37, %r35, %r22;
+add.s32 %r38, %r1388, %r23;
+.loc	1 332 13
+setp.ge.s32 %p27, %r37, %r47;
+setp.ge.s32 %p28, %r38, %r48;
+or.pred %p29, %p27, %p28;
+@%p29 bra $L__BB0_16;
+
+.loc	1 333 17
+mad.lo.s32 %r1401, %r36, -32, %r1445;
+mul.lo.s32 %r1402, %r36, 48;
+mad.lo.s32 %r1403, %r35, 640, %r1402;
+add.s32 %r1404, %r1445, %r1403;
+mul.wide.s32 %rd450, %r1404, 2;
+add.s64 %rd452, %rd435, %rd450;
+.loc	1 334 17
+ld.shared.u32 %r1390, [%rd452];
+ld.shared.u32 %r1391, [%rd452+80];
+ld.shared.u32 %r1394, [%rd452+1280];
+ld.shared.u32 %r1397, [%rd452+1360];
+.loc	1 40 32, function_name $L__info_string10, inlined_at 1 335 17
+
+add.f16x2 %r1389, %r1390, %r1391;
+
+.loc	1 40 32, function_name $L__info_string10, inlined_at 1 335 17
+
+add.f16x2 %r1392, %r1389, %r1394;
+
+.loc	1 40 32, function_name $L__info_string10, inlined_at 1 335 17
+
+add.f16x2 %r1395, %r1392, %r1397;
+
+.loc	1 39 32, function_name $L__info_string7, inlined_at 1 336 17
+mov.u32 %r1400, 872428544;
+
+mul.f16x2 %r1398, %r1395, %r1400;
+
+.loc	1 337 17
+cvt.s64.s32 %rd453, %r37;
+mul.lo.s64 %rd454, %rd453, %rd3;
+cvt.s64.s32 %rd455, %r38;
+add.s64 %rd456, %rd454, %rd455;
+shl.b64 %rd457, %rd456, 5;
+cvt.s64.s32 %rd458, %r1401;
+add.s64 %rd459, %rd458, %rd4;
+add.s64 %rd460, %rd459, %rd457;
+shl.b64 %rd461, %rd460, 1;
+add.s64 %rd462, %rd1, %rd461;
+st.global.u32 [%rd462], %r1398;
+
+$L__BB0_16:
+.loc	1 329 13
+add.s32 %r1405, %r1446, 128;
+shr.s32 %r1406, %r1405, 31;
+shr.u32 %r1407, %r1406, 28;
+add.s32 %r1408, %r1405, %r1407;
+shr.s32 %r39, %r1408, 4;
+.loc	1 330 13
+shr.u32 %r1409, %r1406, 25;
+add.s32 %r1410, %r1405, %r1409;
+shr.s32 %r40, %r1410, 7;
+shl.b32 %r1411, %r40, 3;
+sub.s32 %r1412, %r39, %r1411;
+.loc	1 331 13
+add.s32 %r41, %r40, %r22;
+add.s32 %r42, %r1412, %r23;
+.loc	1 332 13
+setp.ge.s32 %p30, %r41, %r47;
+setp.ge.s32 %p31, %r42, %r48;
+or.pred %p32, %p30, %p31;
+@%p32 bra $L__BB0_18;
+
+.loc	1 333 17
+add.s32 %r1425, %r1445, 256;
+mad.lo.s32 %r1426, %r39, -32, %r1425;
+mul.lo.s32 %r1427, %r39, 48;
+mad.lo.s32 %r1428, %r40, 640, %r1427;
+add.s32 %r1429, %r1425, %r1428;
+mul.wide.s32 %rd463, %r1429, 2;
+add.s64 %rd465, %rd435, %rd463;
+.loc	1 334 17
+ld.shared.u32 %r1414, [%rd465];
+ld.shared.u32 %r1415, [%rd465+80];
+ld.shared.u32 %r1418, [%rd465+1280];
+ld.shared.u32 %r1421, [%rd465+1360];
+.loc	1 40 32, function_name $L__info_string10, inlined_at 1 335 17
+
+add.f16x2 %r1413, %r1414, %r1415;
+
+.loc	1 40 32, function_name $L__info_string10, inlined_at 1 335 17
+
+add.f16x2 %r1416, %r1413, %r1418;
+
+.loc	1 40 32, function_name $L__info_string10, inlined_at 1 335 17
+
+add.f16x2 %r1419, %r1416, %r1421;
+
+.loc	1 39 32, function_name $L__info_string7, inlined_at 1 336 17
+mov.u32 %r1424, 872428544;
+
+mul.f16x2 %r1422, %r1419, %r1424;
+
+.loc	1 337 17
+cvt.s64.s32 %rd466, %r41;
+mul.lo.s64 %rd467, %rd466, %rd3;
+cvt.s64.s32 %rd468, %r42;
+add.s64 %rd469, %rd467, %rd468;
+shl.b64 %rd470, %rd469, 5;
+cvt.s64.s32 %rd471, %r1426;
+add.s64 %rd472, %rd471, %rd4;
+add.s64 %rd473, %rd472, %rd470;
+shl.b64 %rd474, %rd473, 1;
+add.s64 %rd475, %rd1, %rd474;
+st.global.u32 [%rd475], %r1422;
+
+$L__BB0_18:
+.loc	1 328 9
+add.s32 %r1445, %r1445, 512;
+add.s32 %r44, %r1446, 256;
+setp.lt.s32 %p33, %r1446, 0;
+mov.u32 %r1446, %r44;
+@%p33 bra $L__BB0_14;
+
+$L__BB0_19:
+.loc	1 363 1
+ret;
+
+}
+.file	1 "E:\\dlssg-to-fsr3-master\\dlssg\\dl2_conv0_c8_v0.cu"
+.section	.debug_str
+{
+$L__info_string0:
+.b8 95,90,56,115,109,101,109,95,117,51,50,80,75,118,0
+$L__info_string1:
+.b8 95,90,49,48,99,112,95,97,115,121,110,99,49,54,106,80,75,118,98,0
+$L__info_string2:
+.b8 95,90,90,49,51,99,111,110,118,95,100,108,50,95,112,111,111,108,69,78,75,85,108,105,69,95,99,108,69,105,0
+$L__info_string3:
+.b8 95,90,53,108,100,103,51,50,80,75,118,0
+$L__info_string4:
+.b8 95,90,49,49,108,100,109,97,116,114,105,120,95,120,52,106,82,106,83,95,83,95,83,95,0
+$L__info_string5:
+.b8 95,90,56,109,109,97,49,54,56,49,54,82,106,83,95,106,106,106,106,106,106,0
+$L__info_string6:
+.b8 95,90,56,97,99,116,105,118,97,116,101,106,0
+$L__info_string7:
+.b8 95,90,57,102,49,54,120,50,95,109,117,108,106,106,0
+$L__info_string8:
+.b8 95,90,57,102,49,54,120,50,95,109,97,120,106,106,0
+$L__info_string9:
+.b8 95,90,57,102,49,54,120,50,95,109,105,110,106,106,0
+$L__info_string10:
+.b8 95,90,57,102,49,54,120,50,95,97,100,100,106,106,0
+
+}

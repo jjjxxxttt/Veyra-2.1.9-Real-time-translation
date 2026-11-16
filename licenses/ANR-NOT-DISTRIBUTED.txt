@@ -1,0 +1,1 @@
+No ANR runtime/model/configuration/program packs are included. Upstream beta prohibits third-party redistribution. Veyra host adapter source is independent. https://github.com/apex-compute/ANR/issues/9#issuecomment-6857895225
