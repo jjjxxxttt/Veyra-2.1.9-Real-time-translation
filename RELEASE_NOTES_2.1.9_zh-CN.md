@@ -70,5 +70,6 @@
 - 字幕是 Veyra 窗口的附属窗口，**不进入** Veyra 的录制与截图；HDR 内容下为 SDR 亮度。
 - 依赖 Windows 实时字幕（Live Captions），需要系统已启用并正在输出音频。
 - 本地模型首次加载需要数秒（面板显示"加载中"），之后常驻显存；与游戏抢显存时可能变慢。
-- 便携包约 2.2 GB，超过 GitHub Release 单文件 2 GB 上限，建议分卷或把模型单独作为附件上传
-  （仓库内已用 `.gitignore` 排除 `*.gguf`）。
+- 便携包实际压缩后约 **1.69 GB**（`dist\Veyra-2.1.9-translate-win64-portable.zip`），
+  在 GitHub Release 单文件 2 GB 上限内，可直接作为附件上传；
+  仓库内已用 `.gitignore` 排除 `*.gguf` 与超过 100 MB 的运行时 DLL，源码分支只有约 415 MB。
