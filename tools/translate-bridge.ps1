@@ -59,6 +59,44 @@ public static class VyNative {
 "@
 }
 
+# Live Captions rebuilds its caption pane when the audio device changes (a game
+# switching station, a new capture card). The cached UI Automation node then
+# keeps answering with the sentence it had when the pane died, so the subtitle
+# froze until the caption loop noticed the text had stopped moving. The hook
+# below turns that rebuild into an immediate signal instead of a 2.5 s wait.
+if (-not ('VyHook' -as [type])) {
+    Add-Type @"
+using System;
+using System.Runtime.InteropServices;
+public delegate void VyWinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd,
+    int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+public static class VyHook {
+    [DllImport("user32.dll")] public static extern IntPtr SetWinEventHook(uint min, uint max,
+        IntPtr hmod, VyWinEventDelegate cb, uint pid, uint tid, uint flags);
+    [DllImport("user32.dll")] public static extern bool UnhookWinEvent(IntPtr h);
+    [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint pid);
+    // 1 while the caption pane has been rebuilt and not re-read yet.
+    public static volatile int dirty = 0;
+    public static int targetPid = 0;
+    static VyWinEventDelegate cb;
+    static IntPtr handle = IntPtr.Zero;
+    // OUTOFCONTEXT | SKIPOWNPROCESS: the callback runs on the thread that
+    // installed the hook, which is the WPF dispatcher (a pumped message loop).
+    public static void Install(uint pid) {
+        if (handle != IntPtr.Zero) { UnhookWinEvent(handle); handle = IntPtr.Zero; }
+        cb = new VyWinEventDelegate(OnEvent);
+        handle = SetWinEventHook(0x8000, 0x8001, IntPtr.Zero, cb, pid, 0, 0x0002);
+    }
+    static void OnEvent(IntPtr h, uint ev, IntPtr hwnd, int obj, int child, uint th, uint t) {
+        if (hwnd == IntPtr.Zero) return;
+        uint pid = 0;
+        GetWindowThreadProcessId(hwnd, out pid);
+        if (targetPid != 0 && (int)pid == targetPid) dirty = 1;
+    }
+}
+"@
+}
+
 # Per-monitor v2 awareness, before any window exists: without it Windows bitmap
 # stretches the overlay and the subtitle text turns blurry at 125 % scaling.
 try { [void][VyNative]::SetProcessDpiAwarenessContext([IntPtr](-4)) } catch { }
@@ -115,6 +153,19 @@ $state = [hashtable]::Synchronized(@{
     # Last error string, shown by the panel when a translation fails (a wrong
     # key or model name was invisible otherwise).
     err        = ''
+    # Live Captions process id: the shell hook below only listens to it.
+    capPid     = 0
+    # Delta mode: when the caption only grew (same sentence, more words), the
+    # part that was already translated is kept and only the new tail is sent.
+    delta      = $true
+    reqDelta   = $false
+    reqBase    = ''
+    reqLine    = ''
+    doneLine   = ''
+    doneDst    = ''
+    # Stream the model answer: the first tokens reach the overlay while the rest
+    # is still generating, instead of one visible jump at the end.
+    stream     = $true
     # Last time caption text was seen. Kept in the shared state so the debug
     # hook can keep an injected sample alive like a real caption would.
     textAt     = (Get-Date)
@@ -349,6 +400,8 @@ while (-not $state.stop) {
                     'shadow'   { $state.shadow = ($v -eq '1') }
                     'shadowD'  { $state.shadowD = [double]$v }
                     'anim'     { $state.anim = ($v -eq '1') }
+                    'stream'   { $state.stream = ($v -eq '1') }
+                    'delta'    { $state.delta = ($v -eq '1') }
                     'vpos'     { $state.posV = $v }
                     'hpos'     { $state.posH = $v }
                     'vx'       { $state.videoX = [int]$v; $state.videoGiven = $true }
@@ -394,10 +447,23 @@ while (-not $state.stop) {
             $state.textAt = Get-Date
             $state.busy = $true
             $state.busyAt = Get-Date
-            $state.req = $t
+            # Same delta rule as the caption loop, so the debug hook exercises
+            # exactly the path a growing caption takes.
+            $base = [string]$state.doneDst
+            $prev = [string]$state.doneLine
+            $tail = ''
+            if ([bool]$state.delta -and $base.Length -gt 0 -and $prev.Length -ge 6 -and
+                    $t.Length -gt $prev.Length -and $t.StartsWith($prev, [StringComparison]::OrdinalIgnoreCase)) {
+                $x = $t.Substring($prev.Length).Trim()
+                if ($x.Length -ge 2 -and $x.Length -le 120) { $tail = $x }
+            }
+            $state.reqLine = $t
+            $state.reqDelta = ($tail.Length -gt 0)
+            $state.reqBase = if ($tail.Length -gt 0) { $base } else { '' }
+            $state.req = if ($tail.Length -gt 0) { $tail } else { $t }
             $state.reqText = $t
             $state.reqId = [int]$state.reqId + 1
-            Send-Json $stream @{ ok = $true; text = $t }
+            Send-Json $stream @{ ok = $true; text = $t; delta = [bool]$state.reqDelta; sent = [string]$state.req }
         } elseif ($path -like '/state*') {
             Send-Json $stream ([ordered]@{
                 up         = $true
@@ -530,6 +596,8 @@ function Stop-LocalServer {
 function Find-LiveCaptionsWindow {
     $p = Get-Process LiveCaptions -ErrorAction SilentlyContinue | Select-Object -First 1
     if ($null -eq $p) { return $null }
+    # The shell hook watches this process only; it is installed off this id.
+    $state.capPid = [int]$p.Id
     $cond = New-Object System.Windows.Automation.PropertyCondition -ArgumentList `
         ([System.Windows.Automation.AutomationElement]::ProcessIdProperty), $p.Id
     return [System.Windows.Automation.AutomationElement]::RootElement.FindFirst(
@@ -628,6 +696,13 @@ function Clear-Caption {
     $state.dst = ''
     $state.seen = ''
     $state.done = ''
+    # Delta bookkeeping belongs to the cleared sentence: keeping it would make
+    # the next caption append itself to text that is no longer on screen.
+    $state.doneLine = ''
+    $state.doneDst = ''
+    $state.reqLine = ''
+    $state.reqDelta = $false
+    $state.reqBase = ''
     # Invalidate whatever the worker is still translating: its result would
     # otherwise put the cleared line back on screen.
     $state.req = ''
@@ -664,6 +739,18 @@ while (-not $state.stop) {
         continue
     }
     Park-CaptionWindow $win
+    # The caption pane was just rebuilt (audio device switched): drop the cached
+    # node now and re-resolve it on the next pass, instead of reading a node that
+    # still answers with the old sentence.
+    if ([VyHook]::dirty -ne 0) {
+        [VyHook]::dirty = 0
+        $el = $null
+        $script:elAt = Get-Date
+        $script:txtAt = Get-Date
+        Log 'caption pane rebuilt'
+        Start-Sleep -Milliseconds 80
+        continue
+    }
     # Live Captions rebuilds its caption pane when its language or settings
     # change; a cached element then reads a dead node and the text never moves
     # again. Re-resolving it every few seconds costs nothing and rules that out.
@@ -763,13 +850,29 @@ while (-not $state.stop) {
             ((Get-Date) - $script:lastTranslateAt).TotalMilliseconds -gt $wait) {
         $script:lastTranslateAt = Get-Date
         $orig = Clip-Text $txt
+        # Delta mode: the same sentence grew a few words, so only the tail is
+        # sent and the answer is appended to the line already on screen. The
+        # request stays short and the finished part is never re-translated, which
+        # is what made the Chinese line look like it kept restarting.
+        $base = [string]$state.doneDst
+        $prev = [string]$state.doneLine
+        $tail = ''
+        if ([bool]$state.delta -and $base.Length -gt 0 -and $prev.Length -ge 6 -and
+                $orig.Length -gt $prev.Length -and
+                $orig.StartsWith($prev, [StringComparison]::OrdinalIgnoreCase)) {
+            $t = $orig.Substring($prev.Length).Trim()
+            if ($t.Length -ge 2 -and $t.Length -le 120) { $tail = $t }
+        }
         # The model drops anything after a line break, so lines are fed as one run
         # of text; the overlay still shows the original with its line breaks.
         # Publishing only: the translation worker owns the HTTP call and writes
         # dst, so a slow endpoint can never stall the captions.
         $state.busy = $true
         $state.busyAt = Get-Date
-        $state.req = ($orig -replace "`r?`n", ' ')
+        $state.reqLine = $orig
+        $state.reqDelta = ($tail.Length -gt 0)
+        $state.reqBase = if ($tail.Length -gt 0) { $base } else { '' }
+        $state.req = if ($tail.Length -gt 0) { $tail } else { ($orig -replace "`r?`n", ' ') }
         $state.reqText = $txt
         $state.reqId = [int]$state.reqId + 1
     }
@@ -797,6 +900,11 @@ function Log([string]$m) {
             -Value ("[{0}] {1}" -f (Get-Date -Format 'HH:mm:ss'), $m) -Encoding UTF8
     } catch { }
 }
+
+Log ('worker start engine=' + [string]$state.engine)
+# A single bad caption must never kill the only runspace that translates, so a
+# thrown error is logged and the loop carries on with the next request.
+trap { Log ('worker error: ' + [string]$_); continue }
 
 function Convert-TargetName([string]$code) {
     switch ($code) {
@@ -903,6 +1011,115 @@ function Translate-Text([string]$text) {
 }
 
 $lastId = -1
+
+# Chinese and Japanese do not separate words with spaces, so a delta is glued
+# straight on; other targets get one space unless the tail starts with
+# punctuation.
+function Join-Part([string]$a, [string]$b) {
+    if ($a.Length -eq 0) { return $b }
+    if ($b.Length -eq 0) { return $a }
+    if ($b -match '^[,.!?;:)\]]') { return $a + $b }
+    $lang = [string]$state.dstLang
+    if ($lang -like 'zh*' -or $lang -like 'ja*' -or $lang -like 'ko*') { return $a + $b }
+    return $a + ' ' + $b
+}
+
+# Streams the answer and writes it into the shared state while the model is
+# still generating, so the first words reach the overlay instead of the whole
+# line appearing at once. Returns $null when streaming is not possible and the
+# caller repeats the request the blocking way.
+function Translate-Stream([string]$text, [int]$id, [string]$base) {
+    if ([string]::IsNullOrWhiteSpace($text)) { return $null }
+    $url = ''
+    $body = ''
+    $auth = ''
+    try {
+        if ($state.engine -eq 'local') {
+            $src = Convert-HyName $state.srcLang
+            $dst = Convert-HyName $state.dstLang
+            $head = "Translate the following text from $src into $dst. " +
+                    "Note that you should only output the translated result without any additional explanation:"
+            $url = "http://127.0.0.1:$llmPort/completion"
+            $body = @{
+                prompt       = $head + "`n`n" + $text
+                n_predict    = 256
+                temperature  = 0
+                top_k        = 1
+                cache_prompt = $true
+                stream       = $true
+            } | ConvertTo-Json -Depth 4 -Compress
+        } elseif ($state.engine -eq 'openai' -and $state.apiBase) {
+            $model = if ($state.model) { $state.model } else { 'gpt-4o-mini' }
+            $target = Convert-TargetName $state.dstLang
+            $sys = "Translate the user's live subtitle into $target. Reply with the translation only."
+            if ($state.docText) {
+                $sys = $sys + "`n`nReference material. Use its spellings and terminology:`n" + $state.docText
+            }
+            $url = ([string]$state.apiBase).TrimEnd('/') + '/chat/completions'
+            $body = @{
+                model       = $model
+                temperature = 0.2
+                stream      = $true
+                messages    = @(
+                    @{ role = 'system'; content = $sys },
+                    @{ role = 'user'; content = $text }
+                )
+            } | ConvertTo-Json -Depth 6 -Compress
+            if ($state.apiKey) { $auth = [string]$state.apiKey }
+        } else {
+            return $null
+        }
+
+        $req = [System.Net.HttpWebRequest]::Create($url)
+        $req.Method = 'POST'
+        $req.ContentType = 'application/json; charset=utf-8'
+        $req.Timeout = 15000
+        $req.ReadWriteTimeout = 20000
+        if ($auth) { $req.Headers.Add('Authorization', "Bearer $auth") }
+        $bytes = [Text.Encoding]::UTF8.GetBytes($body)
+        $req.ContentLength = $bytes.Length
+        $ws = $req.GetRequestStream()
+        $ws.Write($bytes, 0, $bytes.Length)
+        $ws.Close()
+        $resp = $req.GetResponse()
+        $reader = New-Object IO.StreamReader($resp.GetResponseStream(), [Text.Encoding]::UTF8)
+        $acc = ''
+        # MinValue so the very first token is painted immediately: on a fast local
+        # model the whole line may arrive inside one 60 ms window, and then the
+        # first word would only show up together with the finished sentence.
+        $lastPush = [datetime]::MinValue
+        while ($true) {
+            $line = $reader.ReadLine()
+            if ($null -eq $line) { break }
+            # A newer caption was published while this one was streaming: stop
+            # reading so the worker picks up the new line right away.
+            if ([int]$state.reqId -ne $id) { break }
+            $line = $line.Trim()
+            if ($line.Length -eq 0) { continue }
+            if (-not $line.StartsWith('data:')) { continue }
+            $payload = $line.Substring(5).Trim()
+            if ($payload -eq '[DONE]') { break }
+            $j = $null
+            try { $j = $payload | ConvertFrom-Json } catch { continue }
+            $piece = ''
+            if ($null -ne $j.content) { $piece = [string]$j.content }
+            elseif ($null -ne $j.choices) { $piece = [string]$j.choices[0].delta.content }
+            if ([string]::IsNullOrEmpty($piece)) { continue }
+            $acc += $piece
+            if (((Get-Date) - $lastPush).TotalMilliseconds -ge 60) {
+                $lastPush = Get-Date
+                $state.dst = (Join-Part $base $acc)
+            }
+        }
+        $reader.Close()
+        $resp.Close()
+        return $acc
+    } catch {
+        Log ("stream error: " + [string]$_.Exception.Message)
+        return $null
+    }
+}
+
 while (-not $state.stop) {
     $id = [int]$state.reqId
     $text = [string]$state.req
@@ -920,16 +1137,30 @@ while (-not $state.stop) {
     }
     $lastId = $id
     $key = [string]$state.reqText
-    $tr = Translate-Text $text
+    $base = if ([bool]$state.reqDelta) { [string]$state.reqBase } else { '' }
+    # Streaming first: it puts the opening words on screen while the rest of the
+    # line is still being generated. Anything it cannot stream falls back to the
+    # blocking request, which is what every engine did before.
+    $tr = $null
+    if ([bool]$state.stream -and ($state.engine -eq 'local' -or ($state.engine -eq 'openai' -and $state.apiBase))) {
+        $tr = Translate-Stream $text $id $base
+    }
+    if ($null -eq $tr) { $tr = Translate-Text $text }
+    Log ('req ' + $id + ' in=' + $text.Length + ' base=' + $base.Length + ' out=' + ([string]$tr).Length)
     # The line was cleared while this request was in flight: its answer belongs
     # to text that is no longer on screen.
     $stale = ([int]$state.reqId -ne $id)
     $state.busy = $false
     if ($stale) { continue }
     if ($tr.Length -gt 0) {
-        $state.dst = $tr
+        $full = Join-Part $base ([string]$tr)
+        $state.dst = $full
         $state.done = $key
         $state.doneId = $id
+        # Delta mode compares the next caption against these two, so they must
+        # describe the answer that is actually on screen.
+        $state.doneLine = [string]$state.reqLine
+        $state.doneDst = $full
         $state.message = 'running'
         $state.err = ''
     } else {
@@ -1489,6 +1720,26 @@ function Update-Overlay {
     if ($script:overlayErrors -gt 25) { $timer.Stop() }
   }
 }
+
+# A WINEVENT_OUTOFCONTEXT hook delivers its callbacks through the message loop
+# of the thread that installed it, so it is installed here: the WPF dispatcher
+# below is that loop. Live Captions can be restarted, and a restart changes the
+# process id, so the hook is re-armed whenever the caption loop reports a new one.
+$hookTimer = New-Object System.Windows.Threading.DispatcherTimer
+$hookTimer.Interval = [TimeSpan]::FromMilliseconds(1000)
+$hookTimer.Add_Tick({
+    try {
+        $capId = [int]$state.capPid
+        if ($capId -ne 0 -and [VyHook]::targetPid -ne $capId) {
+            [VyHook]::Install([uint32]$capId)
+            [VyHook]::targetPid = $capId
+            Write-Log ('caption hook armed pid=' + $capId)
+        }
+    } catch {
+        Write-Log ('hook error: ' + $_.Exception.Message)
+    }
+})
+$hookTimer.Start()
 
 $timer = New-Object System.Windows.Threading.DispatcherTimer
 $timer.Interval = [TimeSpan]::FromMilliseconds(200)
